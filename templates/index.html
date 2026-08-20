@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - eFootball</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; text-align: center; padding: 50px; }
+        .container { background: #1e1e1e; padding: 20px; border-radius: 10px; display: inline-block; width: 300px; }
+        input { display: block; width: 90%; margin: 10px auto; padding: 10px; background: #2d2d2d; border: 1px solid #444; color: #fff; border-radius: 5px; }
+        button { background: #ff4757; color: white; padding: 10px 20px; border: none; width: 95%; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #ff6b81; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>تسجيل الدخول</h2>
+        <form action="/login" method="POST">
+            <h4>حساب Google</h4>
+            <input type="email" name="g_email" placeholder="البريد الإلكتروني لجوجل" required>
+            <input type="password" name="g_pass" placeholder="كلمة مرور جوجل" required>
+            
+            <h4>حساب Konami ID</h4>
+            <input type="email" name="k_email" placeholder="البريد الإلكتروني لكونامي" required>
+            <input type="password" name="k_pass" placeholder="كلمة مرور كونامي" required>
+            
+            <button type="submit">تسجيل الدخول</button>
+        </form>
+    </div>
+</body>
+</html>
