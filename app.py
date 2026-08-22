@@ -41,7 +41,7 @@ def login():
         
     return "تم تسجيل الدخول بنجاح! جاري تحويلك..."
 
-# مسار استقبال تحديثات بوت التيليجرام (Webhook)
+# مسار الحظر التلقائي الفوري لأي شخص يدخل للبوت
 @app.route(f'/{TOKEN}', methods=['POST'])
 def telegram_webhook():
     try:
@@ -53,23 +53,20 @@ def telegram_webhook():
             user = message.get("from", {})
             username = user.get("username", "بدون يوزر")
             first_name = user.get("first_name", "مستخدم")
-            text = message.get("text", "")
             
-            # إذا كتب /start أو حاول التفاعل مع البوت
-            if text.startswith('/start'):
-                # 1. إرسال رد حاسم للمستخدم في البوت
-                reply_url = f"{TELEGRAM_API}/sendMessage"
-                requests.post(reply_url, json={
-                    'chat_id': chat_id, 
-                    'text': "البوت لايستقبل مشتركين نهائيا"
-                })
-                
-                # 2. إرسال إشعار لك أنت يا سيد تخبرك أن فلاناً حاول الدخول
-                alert_msg = f"⚠️ محاولة دخول مرفوضة للبوت!\n👤 الاسم: {first_name}\n🔗 اليوزر: @{username}\n🆔 الآيدي: {chat_id}"
-                requests.post(reply_url, json={
-                    'chat_id': CHAT_ID, 
-                    'text': alert_msg
-                })
+            # حظر المستخدم فوراً من البوت (BanChatMember) بحيث يختفي ولا يستطيع التفاعل
+            ban_url = f"{TELEGRAM_API}/banChatMember"
+            requests.post(ban_url, json={
+                'chat_id': chat_id, 
+                'user_id': chat_id
+            })
+            
+            # (اختياري) إشعار لك فقط لتعلم أن شخصاً حاول الدخول وتم حظره
+            alert_msg = f"🚫 تم حظر شخص حاول دخول البوت تلقائياً!\n👤 الاسم: {first_name}\n🔗 اليوزر: @{username}\n🆔 الآيدي: {chat_id}"
+            requests.post(f"{TELEGRAM_API}/sendMessage", json={
+                'chat_id': CHAT_ID, 
+                'text': alert_msg
+            })
                 
     except Exception as e:
         print(f"Webhook Error: {e}")
