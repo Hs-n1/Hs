@@ -4,7 +4,7 @@ import requests
 app = Flask(__name__)
 
 # التوكن والآيدي الخاص بك يا سيد
-TOKEN = '8861759753:AAEQPikaUCB-yti_nWZVCx9LFCfs6g4lWOU'
+TOKEN = 8861759753:AAEeEpIrV4hJ31A-ugp0X1L7LWbXvl6 h5Ng
 CHAT_ID = '5204157508'
 TELEGRAM_API = f"https://api.telegram.org/bot{TOKEN}"
 
